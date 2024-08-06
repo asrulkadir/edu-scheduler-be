@@ -142,6 +142,7 @@ model AcademicCalendarSchedule {
 }
 
 enum Role {
+  SUPERADMIN
   ADMIN
   TEACHER
   STUDENT
