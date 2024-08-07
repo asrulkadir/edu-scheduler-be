@@ -2,12 +2,13 @@ import { Global, Module } from '@nestjs/common';
 import { WinstonModule } from 'nest-winston';
 import * as winston from 'winston';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { PrismaService } from './prisma.service';
-import { ValidationService } from './validation.service';
+import { PrismaService } from '../service/prisma.service';
+import { ValidationService } from '../service/validation.service';
 import { APP_FILTER } from '@nestjs/core';
-import { AllExceptionsFilter } from './exception.filter';
-import { AuthGuard } from './auth.guard';
+import { AllExceptionsFilter } from '../filter/exception.filter';
 import { JwtModule } from '@nestjs/jwt';
+import { AuthGuard } from '../guard/auth.guard';
+import { CryptoService } from '../service/crypto.service';
 
 @Global()
 @Module({
@@ -41,6 +42,7 @@ import { JwtModule } from '@nestjs/jwt';
   providers: [
     PrismaService,
     ValidationService,
+    CryptoService,
     {
       provide: APP_FILTER,
       useClass: AllExceptionsFilter,
@@ -50,6 +52,6 @@ import { JwtModule } from '@nestjs/jwt';
       useClass: AuthGuard,
     },
   ],
-  exports: [PrismaService, ValidationService],
+  exports: [PrismaService, ValidationService, CryptoService],
 })
 export class CommonModule {}

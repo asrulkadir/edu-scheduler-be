@@ -1,15 +1,20 @@
 import { EUserRole } from 'src/utils/enum';
 
+export class RegisterClientRequest {
+  clientName: string;
+  username: string;
+  password: string;
+  name: string;
+  email: string;
+}
+
 export class CreateUserRequest {
   username: string;
   password: string;
   name: string;
   email: string;
-  role:
-    | EUserRole.SuperAdmin
-    | EUserRole.Admin
-    | EUserRole.Teacher
-    | EUserRole.Student;
+  role: EUserRole.Admin | EUserRole.Teacher | EUserRole.Student;
+  clientId: string;
 }
 
 export class UserResponse {
@@ -19,6 +24,7 @@ export class UserResponse {
   email: string;
   access_token?: string;
   role: string;
+  clientId: string;
 }
 
 export class UpdateUserRequest {
@@ -27,9 +33,5 @@ export class UpdateUserRequest {
   password?: string;
   username?: string;
   email?: string;
-  role?:
-    | EUserRole.SuperAdmin
-    | EUserRole.Admin
-    | EUserRole.Teacher
-    | EUserRole.Student;
+  role?: EUserRole.Admin | EUserRole.Teacher | EUserRole.Student;
 }

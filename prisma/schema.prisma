@@ -31,8 +31,10 @@ model Teacher {
 
 model User {
   id        String    @id @default(uuid())
-  email     String?   @unique
+  email     String    @unique
+  emailHash String    @unique
   username  String    @unique
+  name      String
   role      Role
   createdAt DateTime  @default(now())
   password  String
@@ -40,8 +42,8 @@ model User {
   teacherId String?
   student   Student?  @relation(fields: [studentId], references: [id])
   studentId String?
-  client    Client?   @relation(fields: [clientId], references: [id])
-  clientId  String?
+  client    Client   @relation(fields: [clientId], references: [id])
+  clientId  String
 }
 
 model Client {
