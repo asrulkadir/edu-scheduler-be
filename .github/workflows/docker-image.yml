@@ -34,10 +34,10 @@ jobs:
       run: npm install
 
     - name: Prisma migrate deploy
-      run: npx prisma migrate deploy
+      run: npx prisma migrate dev
 
-    - name: Prisma generate
-      run: npx prisma generate
+    # - name: Prisma generate
+    #   run: npx prisma generate
 
     - name: Build the application
       run: npm run build
