@@ -3,19 +3,6 @@ version: '3.8'
 
 # Define services
 services:
-
-  # Database service using PostgreSQL image
-  database:
-    image: postgres:latest # Use the latest PostgreSQL image from Docker Hub
-    container_name: postgres
-    volumes:
-      - postgres:/var/lib/postgresql/data
-    restart: always
-    env_file:
-      - .env  # Load environment variables from the .env file in the current directory
-    ports:
-      - "5432:5432"  # Forward the container's port 5432 to the host machine's port 5432 for accessing PostgreSQL
-
   # Backend service
   backend:
     build: .  # Build the Docker image using the Dockerfile in the current directory
@@ -28,6 +15,3 @@ services:
       - database  # Ensure that the backend service starts after the database service is up and running
     env_file:
       - .env  # Load environment variables from the .env file in the current directory
-
-volumes:
-    postgres:  # Define a named volume for the PostgreSQL data directory
