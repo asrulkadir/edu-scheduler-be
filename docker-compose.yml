@@ -8,6 +8,7 @@ services:
   database:
     image: postgres:latest # Use the latest PostgreSQL image from Docker Hub
     container_name: postgres
+    restart: always
     env_file:
       - .env  # Load environment variables from the .env file in the current directory
     ports:
