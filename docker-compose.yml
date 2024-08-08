@@ -18,6 +18,7 @@ services:
   backend:
     build: .  # Build the Docker image using the Dockerfile in the current directory
     image: asrulkadir/skeduler-be:latest  # Custom name and tag for the built image
+    restart: always # Restart the container automatically if it stops
     platform: linux/amd64  # Specify the platform for the image
     ports:
       - "4000:4000"  # Forward the container's port 3333 to the host machine's port 3333 for accessing the backend service
