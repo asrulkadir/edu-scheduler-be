@@ -18,4 +18,4 @@ RUN npx prisma generate
 EXPOSE 4000
 
 # Menjalankan aplikasi
-CMD ["npm", "run", "start:migrate"]
+CMD ["npm", "run", "start:migrate:prod"]
