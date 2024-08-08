@@ -20,6 +20,6 @@ jobs:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_PASSWORD }}
     - name: Build the Docker image
-      run: docker build -t asrulkadir/skeduler-be:latest .  --platform=linux/amd64
+      run: docker build --env-file .env -t asrulkadir/skeduler-be:latest .  --platform=linux/amd64
     - name: Push the Docker image
       run: docker push asrulkadir/skeduler-be:latest
