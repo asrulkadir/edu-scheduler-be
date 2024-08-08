@@ -8,6 +8,8 @@ services:
   database:
     image: postgres:latest # Use the latest PostgreSQL image from Docker Hub
     container_name: postgres
+    volumes:
+      - postgres:/var/lib/postgresql/data
     restart: always
     env_file:
       - .env  # Load environment variables from the .env file in the current directory
@@ -18,7 +20,7 @@ services:
   backend:
     build: .  # Build the Docker image using the Dockerfile in the current directory
     image: asrulkadir/skeduler-be:latest  # Custom name and tag for the built image
-    restart: always # Restart the container automatically if it stops
+    # restart: always # Restart the container automatically if it stops
     platform: linux/amd64  # Specify the platform for the image
     ports:
       - "4000:4000"  # Forward the container's port 3333 to the host machine's port 3333 for accessing the backend service
@@ -26,3 +28,6 @@ services:
       - database  # Ensure that the backend service starts after the database service is up and running
     env_file:
       - .env  # Load environment variables from the .env file in the current directory
+
+volumes:
+    postgres:  # Define a named volume for the PostgreSQL data directory
