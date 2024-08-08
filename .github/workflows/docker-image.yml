@@ -23,8 +23,8 @@ jobs:
     - name: Install dependencies
       run: npm install
 
-    - name: Generate Prisma
-      run: npx prisma generate
+    - name: Prisma migrate deploy
+      run: npx prisma migrate deploy
 
     - name: Build the application
       run: npm run build
