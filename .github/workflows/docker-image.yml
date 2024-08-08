@@ -34,7 +34,4 @@ jobs:
         tags: asrulkadir/skeduler-be:latest
         platforms: linux/amd64
     - name: Push the Docker image
-      uses: docker/build-push-action@v3
-      with:
-        context: .
-        push: asrulkadir/skeduler-be:latest
+      run: docker push asrulkadir/skeduler-be:latest
