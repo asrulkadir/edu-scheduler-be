@@ -1,5 +1,5 @@
 # Menggunakan Node.js sebagai base image
-FROM node:18-alpine
+FROM node:lts-alpine
 
 # Menentukan direktori kerja di dalam container
 WORKDIR /app
