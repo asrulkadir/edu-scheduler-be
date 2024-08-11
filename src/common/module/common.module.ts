@@ -9,6 +9,7 @@ import { AllExceptionsFilter } from '../filter/exception.filter';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthGuard } from '../guard/auth.guard';
 import { CryptoService } from '../service/crypto.service';
+import { RolesGuard } from '../guard/roles.guard';
 
 @Global()
 @Module({
@@ -50,6 +51,10 @@ import { CryptoService } from '../service/crypto.service';
     {
       provide: 'APP_GUARD',
       useClass: AuthGuard,
+    },
+    {
+      provide: 'APP_GUARD',
+      useClass: RolesGuard,
     },
   ],
   exports: [PrismaService, ValidationService, CryptoService],

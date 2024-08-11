@@ -1,12 +1,13 @@
 # YAML configuration file for Docker Compose version 3.8
-version: '3.8'
+# version: '3.8'
+name: skeduler
 
 # Define services
 services:
 
   # Database service using PostgreSQL image
   database:
-    image: postgres:14 # Use the latest PostgreSQL image from Docker Hub
+    image: postgres:latest # Use the PostgreSQL 14 image from Docker Hub
     container_name: postgres
     volumes:
       - postgres_data:/var/lib/postgresql/data  # Mount a volume for persisting data
@@ -19,6 +20,7 @@ services:
   backend:
     build: .  # Build the Docker image using the Dockerfile in the current directory
     image: asrulkadir/skeduler-be:latest  # Custom name and tag for the built image
+    container_name: skeduler-be  # Name of the container
     platform: linux/amd64  # Specify the platform for the image
     ports:
       - "4000:4000"  # Forward the container's port 3333 to the host machine's port 3333 for accessing the backend service

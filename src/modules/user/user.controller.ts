@@ -21,6 +21,10 @@ import {
   UserResponse,
 } from 'src/models/user.model';
 import { WebResponse } from 'src/models/web.model';
+import { Auth } from 'src/common/decorator/auth.decorator';
+import { UserAuth } from 'src/models/auth.model';
+import { Roles } from 'src/common/decorator/roles.decorator';
+import { EUserRole } from 'src/utils/enum';
 
 @Controller('api/users')
 export class UserController {
@@ -41,12 +45,12 @@ export class UserController {
   }
 
   @Post()
-  @Public()
   @HttpCode(200)
   async createUser(
+    @Auth() user: UserAuth,
     @Body() request: CreateUserRequest,
   ): Promise<WebResponse<UserResponse>> {
-    const result = await this.userService.createUser(request);
+    const result = await this.userService.createUser(user, request);
     return {
       status: 'success',
       message: 'User created',
@@ -54,13 +58,52 @@ export class UserController {
     };
   }
 
+  @Get('current')
+  @HttpCode(200)
+  async getCurrentUser(
+    @Auth() user: UserAuth,
+  ): Promise<WebResponse<UserResponse>> {
+    const result = await this.userService.getCurrentUser(user);
+    return {
+      status: 'success',
+      message: 'Users found',
+      data: result,
+    };
+  }
+
+  @Put('current')
+  @HttpCode(200)
+  async updateCurrentUser(
+    @Auth() user: UserAuth,
+    @Body() request: UpdateUserRequest,
+  ): Promise<WebResponse<UserResponse>> {
+    const result = await this.userService.updateCurrentUser(user, request);
+    return {
+      status: 'success',
+      message: 'User updated',
+      data: result,
+    };
+  }
+
+  @Get()
+  @Roles(EUserRole.SuperAdmin, EUserRole.Admin)
+  @HttpCode(200)
+  async getUsers(@Auth() user: UserAuth): Promise<WebResponse<UserResponse[]>> {
+    const result = await this.userService.getUsers(user);
+    return {
+      status: 'success',
+      message: 'Users found',
+      data: result,
+    };
+  }
+
   @Get(':id')
-  @Public()
   @HttpCode(200)
   async getUserByUsername(
+    @Auth() user: UserAuth,
     @Param('id') id: string,
   ): Promise<WebResponse<UserResponse>> {
-    const result = await this.userService.getUserByUsername(id);
+    const result = await this.userService.getUserByUsername(user, id);
     return {
       status: 'success',
       message: 'Users found',
@@ -69,8 +112,10 @@ export class UserController {
   }
 
   @Put(':id')
+  @Roles(EUserRole.SuperAdmin)
   @HttpCode(200)
   async updateUser(
+    @Auth() user: UserAuth,
     @Param('id') id: string,
     @Body() request: UpdateUserRequest,
   ): Promise<WebResponse<UserResponse>> {
@@ -78,7 +123,7 @@ export class UserController {
       ...request,
       id,
     };
-    const result = await this.userService.updateUser(id, updateRequest);
+    const result = await this.userService.updateUser(user, id, updateRequest);
     return {
       status: 'success',
       message: 'User updated',
@@ -87,11 +132,13 @@ export class UserController {
   }
 
   @Delete(':id')
+  @Roles(EUserRole.SuperAdmin, EUserRole.Admin)
   @HttpCode(200)
   async deleteUser(
+    @Auth() user: UserAuth,
     @Param('id') id: string,
   ): Promise<WebResponse<UserResponse>> {
-    const result = await this.userService.deleteUser(id);
+    const result = await this.userService.deleteUser(user, id);
     return {
       status: 'success',
       message: 'User deleted',

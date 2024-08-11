@@ -16,6 +16,7 @@ import { PrismaService } from 'src/common/service/prisma.service';
 import { ValidationService } from 'src/common/service/validation.service';
 import { EUserRole } from 'src/utils/enum';
 import { CryptoService } from 'src/common/service/crypto.service';
+import { UserAuth } from 'src/models/auth.model';
 
 @Injectable()
 export class UserService {
@@ -67,37 +68,46 @@ export class UserService {
     };
   }
 
-  async createUser(request: CreateUserRequest): Promise<UserResponse> {
+  async createUser(
+    currentUser: UserAuth,
+    request: CreateUserRequest,
+  ): Promise<UserResponse> {
     this.logger.debug(`createUser: request=${JSON.stringify(request)}`);
     const createRequest: CreateUserRequest = this.validationService.validate(
       UserValidation.CREATE,
       request,
     );
 
+    const emailHash = this.crypto.hash(createRequest.email);
+
     await this.checkIfExists('username', createRequest.username);
-    await this.checkIfExists('email', createRequest.email);
+    await this.checkIfExists('emailHash', emailHash);
 
     createRequest.password = await bcrypt.hash(createRequest.password, 10);
+    const emailEncrypted = this.crypto.encrypt(createRequest.email);
+    createRequest.clientId = currentUser.clientId;
 
     const user = await this.prismaService.user.create({
       data: {
         ...createRequest,
+        emailHash,
+        email: emailEncrypted,
       },
     });
 
     return {
       username: user.username,
-      email: user.email,
+      email: this.crypto.decrypt(user.email),
       name: user.name,
       role: user.role,
       clientId: user.clientId,
     };
   }
 
-  async getUserByUsername(username: string): Promise<UserResponse> {
+  async getCurrentUser(currentUser: UserAuth): Promise<UserResponse> {
     const user = await this.prismaService.user.findUnique({
       where: {
-        username,
+        id: currentUser.id,
       },
     });
 
@@ -108,14 +118,120 @@ export class UserService {
     return {
       id: user.id,
       username: user.username,
-      email: user.email,
+      email: this.crypto.decrypt(user.email),
       name: user.name,
       role: user.role,
       clientId: user.clientId,
     };
   }
 
+  async getUsers(currentUser: UserAuth): Promise<UserResponse[]> {
+    const users = await this.prismaService.user.findMany({
+      where: {
+        clientId: currentUser.clientId,
+        id: {
+          not: currentUser.id,
+        },
+        role:
+          currentUser.role === EUserRole.SuperAdmin
+            ? {}
+            : {
+                not: EUserRole.SuperAdmin,
+              },
+      },
+    });
+
+    return users.map((user) => {
+      return {
+        id: user.id,
+        username: user.username,
+        email: this.crypto.decrypt(user.email),
+        name: user.name,
+        role: user.role,
+        clientId: user.clientId,
+      };
+    });
+  }
+
+  async getUserByUsername(
+    currentUser: UserAuth,
+    username: string,
+  ): Promise<UserResponse> {
+    const user = await this.prismaService.user.findUnique({
+      where: {
+        username,
+        clientId: currentUser.clientId,
+      },
+    });
+
+    if (!user) {
+      throw new HttpException('User not found', 400);
+    }
+
+    return {
+      id: user.id,
+      username: user.username,
+      email: this.crypto.decrypt(user.email),
+      name: user.name,
+      role: user.role,
+      clientId: user.clientId,
+    };
+  }
+
+  async updateCurrentUser(
+    currentUser: UserAuth,
+    request: UpdateUserRequest,
+  ): Promise<UserResponse> {
+    const updateRequest: UpdateUserRequest = this.validationService.validate(
+      UserValidation.UPDATECURRENT,
+      request,
+    );
+
+    const user = await this.prismaService.user.findUnique({
+      where: {
+        id: currentUser.id,
+      },
+    });
+
+    if (!user) {
+      throw new HttpException('User not found', 400);
+    }
+
+    if (updateRequest.username) {
+      await this.checkIfExists('username', updateRequest.username);
+    }
+
+    if (updateRequest.email) {
+      const emailHash = this.crypto.hash(updateRequest.email);
+      await this.checkIfExists('emailHash', emailHash);
+      updateRequest.email = this.crypto.encrypt(updateRequest.email);
+    }
+
+    if (updateRequest.password) {
+      updateRequest.password = await bcrypt.hash(updateRequest.password, 10);
+    }
+
+    const updatedUser = await this.prismaService.user.update({
+      where: {
+        id: currentUser.id,
+      },
+      data: {
+        ...updateRequest,
+      },
+    });
+
+    return {
+      id: updatedUser.id,
+      username: updatedUser.username,
+      email: this.crypto.decrypt(updatedUser.email),
+      name: updatedUser.name,
+      role: updatedUser.role,
+      clientId: updatedUser.clientId,
+    };
+  }
+
   async updateUser(
+    currentUser: UserAuth,
     userId: string,
     request: UpdateUserRequest,
   ): Promise<UserResponse> {
@@ -139,7 +255,9 @@ export class UserService {
     }
 
     if (updateRequest.email) {
-      await this.checkIfExists('email', updateRequest.email);
+      const emailHash = this.crypto.hash(updateRequest.email);
+      await this.checkIfExists('emailHash', emailHash);
+      updateRequest.email = this.crypto.encrypt(updateRequest.email);
     }
 
     if (updateRequest.password) {
@@ -154,15 +272,19 @@ export class UserService {
     });
 
     return {
+      id: updatedUser.id,
       username: updatedUser.username,
-      email: updatedUser.email,
+      email: this.crypto.decrypt(updatedUser.email),
       name: updatedUser.name,
       role: updatedUser.role,
       clientId: updatedUser.clientId,
     };
   }
 
-  async deleteUser(userId: string): Promise<UserResponse> {
+  async deleteUser(
+    currentUser: UserAuth,
+    userId: string,
+  ): Promise<UserResponse> {
     // check if user exists
     const user = await this.prismaService.user.findUnique({
       where: {
@@ -178,6 +300,13 @@ export class UserService {
       throw new HttpException('Cannot delete super admin', 400);
     }
 
+    if (
+      user.role === EUserRole.Admin &&
+      currentUser.role !== EUserRole.SuperAdmin
+    ) {
+      throw new HttpException('Cannot delete admin', 400);
+    }
+
     const userDeleted = await this.prismaService.user.delete({
       where: {
         id: userId,
@@ -187,12 +316,7 @@ export class UserService {
     return userDeleted;
   }
 
-  async checkIfExists(
-    property: 'username' | 'emailHash' | 'email',
-    value: string,
-  ) {
-    this.logger.debug(`valueEmail: ${value}`);
-
+  async checkIfExists(property: 'username' | 'emailHash', value: string) {
     const existingUser = await this.prismaService.user.findFirst({
       where: {
         [property]: value,

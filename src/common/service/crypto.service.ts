@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as crypto from 'crypto';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 
 @Injectable()
 export class CryptoService {
@@ -8,7 +9,10 @@ export class CryptoService {
   private readonly algorithm = 'aes-256-ctr';
   private readonly secretKey: string;
 
-  constructor(config: ConfigService) {
+  constructor(
+    @Inject(WINSTON_MODULE_PROVIDER) private logger: Logger,
+    config: ConfigService,
+  ) {
     this.config = config;
     this.secretKey = this.config.get<string>('CRYPTO_SECRET_KEY');
   }
@@ -42,6 +46,7 @@ export class CryptoService {
       decipher.final(),
     ]);
 
+    this.logger.debug(`Decrypted: ${decrypted.toString()}`);
     return decrypted.toString();
   }
 
