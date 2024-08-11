@@ -54,7 +54,7 @@ export class AuthService {
       clientId: user.clientId,
       role: user.role,
       email: this.crypto.decrypt(user.email),
-          name: user.name,
+      name: user.name,
     };
 
     const token = await this.jwtService.signAsync(payload);
