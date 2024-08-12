@@ -51,28 +51,31 @@ export class UserValidation {
       this.passwordValidationMessage,
     );
 
-  static readonly UPDATE: ZodType = z
-    .object({
-      id: z.string().uuid(),
-      name: z.string().min(1).max(100).optional(),
-      email: z.string().email().optional(),
-      password: z.string().min(6).max(100).optional(),
-      role: z
-        .enum([EUserRole.Admin, EUserRole.Teacher, EUserRole.Student])
-        .optional(),
-      username: z
-        .string()
-        .min(1)
-        .max(100)
-        .regex(/^[a-zA-Z0-9_]*$/, {
-          message: 'Username must be alphanumeric and underscore',
-        })
-        .optional(),
-    })
-    .refine(
-      (data) => this.passwordValidation(data),
-      this.passwordValidationMessage,
-    );
+  static readonly UPDATE: ZodType = z.object({
+    id: z.string().uuid(),
+    name: z.string().min(1).max(100).optional(),
+    email: z.string().email().optional(),
+    password: z
+      .string()
+      .min(6)
+      .max(100)
+      .regex(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{6,}$/, {
+        message:
+          'Password must contain at least 6 characters, include number, uppercase, lowercase, and special character',
+      })
+      .optional(),
+    role: z
+      .enum([EUserRole.Admin, EUserRole.Teacher, EUserRole.Student])
+      .optional(),
+    username: z
+      .string()
+      .min(1)
+      .max(100)
+      .regex(/^[a-zA-Z0-9_]*$/, {
+        message: 'Username must be alphanumeric and underscore',
+      })
+      .optional(),
+  });
 
   static readonly UPDATECURRENT: ZodType = z.object({
     name: z.string().min(1).max(100).optional(),

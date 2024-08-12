@@ -26,14 +26,15 @@ export class AllExceptionsFilter implements ExceptionFilter {
       response.status(exception.getStatus()).json({
         statusCode: exception.getStatus(),
         timestamp: new Date().toISOString(),
-        error: exception.message,
+        message: exception.message,
+        error: true,
       });
     } else if (exception instanceof ZodError) {
       // handle ZodError
       response.status(HttpStatus.BAD_REQUEST).json({
         statusCode: HttpStatus.BAD_REQUEST,
         timestamp: new Date().toISOString(),
-        error: 'Bad Request',
+        error: true,
         message: exception.errors,
       });
     } else {
@@ -41,7 +42,8 @@ export class AllExceptionsFilter implements ExceptionFilter {
       response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
         statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
         timestamp: new Date().toISOString(),
-        error: 'Internal Server Error',
+        message: 'Internal Server Error',
+        error: true,
       });
     }
   }

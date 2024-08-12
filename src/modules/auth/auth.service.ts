@@ -60,6 +60,8 @@ export class AuthService {
     const token = await this.jwtService.signAsync(payload);
     const tokenEncrypted = this.crypto.encrypt(token);
 
+    this.logger.debug(`User have logged in: ${payload.username}`);
+
     return {
       access_token: tokenEncrypted,
       ...payload,

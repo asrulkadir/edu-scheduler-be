@@ -38,6 +38,7 @@ export class UserController {
   ): Promise<WebResponse<UserResponse>> {
     const result = await this.userService.registerClient(request);
     return {
+      statusCode: 200,
       status: 'success',
       message: 'User created',
       data: result,
@@ -52,6 +53,7 @@ export class UserController {
   ): Promise<WebResponse<UserResponse>> {
     const result = await this.userService.createUser(user, request);
     return {
+      statusCode: 200,
       status: 'success',
       message: 'User created',
       data: result,
@@ -65,6 +67,7 @@ export class UserController {
   ): Promise<WebResponse<UserResponse>> {
     const result = await this.userService.getCurrentUser(user);
     return {
+      statusCode: 200,
       status: 'success',
       message: 'Users found',
       data: result,
@@ -79,6 +82,7 @@ export class UserController {
   ): Promise<WebResponse<UserResponse>> {
     const result = await this.userService.updateCurrentUser(user, request);
     return {
+      statusCode: 200,
       status: 'success',
       message: 'User updated',
       data: result,
@@ -91,6 +95,7 @@ export class UserController {
   async getUsers(@Auth() user: UserAuth): Promise<WebResponse<UserResponse[]>> {
     const result = await this.userService.getUsers(user);
     return {
+      statusCode: 200,
       status: 'success',
       message: 'Users found',
       data: result,
@@ -105,6 +110,7 @@ export class UserController {
   ): Promise<WebResponse<UserResponse>> {
     const result = await this.userService.getUserByUsername(user, id);
     return {
+      statusCode: 200,
       status: 'success',
       message: 'Users found',
       data: result,
@@ -125,6 +131,7 @@ export class UserController {
     };
     const result = await this.userService.updateUser(user, id, updateRequest);
     return {
+      statusCode: 200,
       status: 'success',
       message: 'User updated',
       data: result,
@@ -140,6 +147,7 @@ export class UserController {
   ): Promise<WebResponse<UserResponse>> {
     const result = await this.userService.deleteUser(user, id);
     return {
+      statusCode: 200,
       status: 'success',
       message: 'User deleted',
       data: result,

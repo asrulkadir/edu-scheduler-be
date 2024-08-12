@@ -46,7 +46,6 @@ export class CryptoService {
       decipher.final(),
     ]);
 
-    this.logger.debug(`Decrypted: ${decrypted.toString()}`);
     return decrypted.toString();
   }
 
