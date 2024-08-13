@@ -35,7 +35,9 @@ export class AllExceptionsFilter implements ExceptionFilter {
         statusCode: HttpStatus.BAD_REQUEST,
         timestamp: new Date().toISOString(),
         error: true,
-        message: exception.errors,
+        // custom error message
+        message: exception.errors.map((error) => error.message)?.[0],
+        errors: exception.errors,
       });
     } else {
       // handle other exceptions

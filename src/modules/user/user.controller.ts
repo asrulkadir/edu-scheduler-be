@@ -46,6 +46,7 @@ export class UserController {
   }
 
   @Post()
+  @Roles(EUserRole.SuperAdmin, EUserRole.Admin)
   @HttpCode(200)
   async createUser(
     @Auth() user: UserAuth,
@@ -108,7 +109,7 @@ export class UserController {
     @Auth() user: UserAuth,
     @Param('id') id: string,
   ): Promise<WebResponse<UserResponse>> {
-    const result = await this.userService.getUserByUsername(user, id);
+    const result = await this.userService.getUserById(user, id);
     return {
       statusCode: 200,
       status: 'success',

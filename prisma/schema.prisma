@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -14,138 +8,132 @@ datasource db {
 }
 
 model Teacher {
-  id         String    @id @default(uuid())
-  name       String
-  gender     String
-  subjectIds String[]
-  profileImg String?
-  nip        String    @unique
-  users      User[]
-  classes    Class[]
-  subjects   Subject[]
-  teachingSchedules TeachingSchedule[]
+  id                String             @id @default(uuid())
+  name              String
+  gender            String
+  subjectIds        String[]
+  profileImg        String?
+  nip               String             @unique
+  phone             String?            @unique
+  address           String?
+  classes           Class[]
+  subjects          Subject[]
   subjectsSchedules SubjectsSchedule[]
-  phone      String?  @unique
-  address    String?
+  teachingSchedules TeachingSchedule[]
+  users             User[]
 }
 
 model User {
-  id        String    @id @default(uuid())
-  email     String    @unique
-  emailHash String    @unique
-  username  String    @unique
-  name      String
+  id        String   @id @default(uuid())
+  email     String   @unique
+  username  String   @unique
   role      Role
-  createdAt DateTime  @default(now())
+  createdAt DateTime @default(now())
   password  String
-  teacher   Teacher?  @relation(fields: [teacherId], references: [id])
   teacherId String?
-  student   Student?  @relation(fields: [studentId], references: [id])
   studentId String?
-  client    Client   @relation(fields: [clientId], references: [id])
   clientId  String
+  name      String
+  emailHash String   @unique
+  updatedAt DateTime @updatedAt
+  client    Client   @relation(fields: [clientId], references: [id])
+  student   Student? @relation(fields: [studentId], references: [id])
+  teacher   Teacher? @relation(fields: [teacherId], references: [id])
 }
 
 model Client {
-  id        String    @id @default(uuid())
+  id        String   @id @default(uuid())
   name      String
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   users     User[]
 }
 
 model Subject {
-  id          String    @id @default(uuid())
-  name        String
-  description String
-  teacher     Teacher?  @relation(fields: [teacherId], references: [id])
-  teacherId   String?
-  classes     Class[]
-
-  TeachingSchedule TeachingSchedule[]
-
+  id               String             @id @default(uuid())
+  name             String
+  description      String
+  teacherId        String?
+  teacher          Teacher?           @relation(fields: [teacherId], references: [id])
   SubjectsSchedule SubjectsSchedule[]
+  TeachingSchedule TeachingSchedule[]
+  classes          Class[]            @relation("ClassToSubject")
 }
 
 model TeachingSchedule {
-  id        String   @id @default(uuid())
-  days      String
-  startTime DateTime
-  endTime   DateTime
-  teacher   Teacher   @relation(fields: [teacherId], references: [id])
-  teacherId String
-  subject   Subject   @relation(fields: [subjectId], references: [id])
-  subjectId String
-  class     Class     @relation(fields: [classId], references: [id])
-  classId   String
-
+  id               String             @id @default(uuid())
+  days             String
+  startTime        DateTime
+  endTime          DateTime
+  teacherId        String
+  subjectId        String
+  classId          String
   SubjectsSchedule SubjectsSchedule[]
+  class            Class              @relation(fields: [classId], references: [id])
+  subject          Subject            @relation(fields: [subjectId], references: [id])
+  teacher          Teacher            @relation(fields: [teacherId], references: [id])
 }
 
 model SubjectsSchedule {
-  id                   String   @id @default(uuid())
-  days                 String
-  startTime            DateTime
-  endTime              DateTime
-  teacher              Teacher?  @relation(fields: [takenByteacher], references: [id])
-  takenByteacher       String?
-  subject              Subject   @relation(fields: [subjectId], references: [id])
-  subjectId            String
-  class                Class?    @relation(fields: [classId], references: [id])
-  classId              String?
-  teachingSchedule     TeachingSchedule? @relation(fields: [teachingScheduleId], references: [id])
-  teachingScheduleId   String?
-  academicCalendar     AcademicCalendar @relation(fields: [academicCalendarId], references: [id])
-  academicCalendarId   String
+  id                 String            @id @default(uuid())
+  days               String
+  startTime          DateTime
+  endTime            DateTime
+  takenByteacher     String?
+  subjectId          String
+  classId            String?
+  teachingScheduleId String?
+  academicCalendarId String
+  academicCalendar   AcademicCalendar  @relation(fields: [academicCalendarId], references: [id])
+  class              Class?            @relation(fields: [classId], references: [id])
+  subject            Subject           @relation(fields: [subjectId], references: [id])
+  teacher            Teacher?          @relation(fields: [takenByteacher], references: [id])
+  teachingSchedule   TeachingSchedule? @relation(fields: [teachingScheduleId], references: [id])
 }
 
 model Class {
-  id               String    @id @default(uuid())
-  name             String
-  homeroomTeacher  Teacher?  @relation(fields: [homeroomTeacherId], references: [id])
+  id                String             @id @default(uuid())
+  name              String
   homeroomTeacherId String?
-  subjects         Subject[]
-  students         Student[]
-
-  TeachingSchedule TeachingSchedule[]
-
-  SubjectsSchedule SubjectsSchedule[]
+  homeroomTeacher   Teacher?           @relation(fields: [homeroomTeacherId], references: [id])
+  students          Student[]
+  SubjectsSchedule  SubjectsSchedule[]
+  TeachingSchedule  TeachingSchedule[]
+  subjects          Subject[]          @relation("ClassToSubject")
 }
 
 model Student {
-  id         String   @id @default(uuid())
+  id         String  @id @default(uuid())
   name       String
   gender     String
   profileImg String?
-  nis        String   @unique
-  class      Class    @relation(fields: [classId], references: [id])
+  nis        String  @unique
   classId    String
-
-  User User[]
+  class      Class   @relation(fields: [classId], references: [id])
+  User       User[]
 }
 
 model AcademicCalendar {
-  id        String   @id @default(uuid())
-  name      String
-  startTime DateTime
-  endTime   DateTime
-  schedules AcademicCalendarSchedule[]
-
+  id               String                     @id @default(uuid())
+  name             String
+  startTime        DateTime
+  endTime          DateTime
+  schedules        AcademicCalendarSchedule[]
   SubjectsSchedule SubjectsSchedule[]
 }
 
 model AcademicCalendarSchedule {
-  id                 String   @id @default(uuid())
+  id                 String           @id @default(uuid())
   name               String
   date               DateTime
   description        String?
-  academicCalendar   AcademicCalendar @relation(fields: [academicCalendarId], references: [id])
   academicCalendarId String
+  academicCalendar   AcademicCalendar @relation(fields: [academicCalendarId], references: [id])
 }
 
 enum Role {
-  SUPERADMIN
   ADMIN
   TEACHER
   STUDENT
+  SUPERADMIN
 }

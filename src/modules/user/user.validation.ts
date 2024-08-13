@@ -9,7 +9,7 @@ export class UserValidation {
 
   private static readonly passwordValidationMessage = {
     message:
-      'Password must contain at least 6 characters, include number, uppercase, lowercase, and special character',
+      'Password must contain at least 6 characters, include number, uppercase, and lowercase',
     path: ['password'],
   };
 
@@ -36,7 +36,12 @@ export class UserValidation {
     .object({
       name: z.string().min(1).max(100),
       email: z.string().email(),
-      password: z.string().min(6).max(100),
+      password: z
+        .string()
+        .min(6, {
+          message: 'Password must be at least 6 characters',
+        })
+        .max(100),
       role: z.enum([EUserRole.Admin, EUserRole.Teacher, EUserRole.Student]),
       username: z
         .string()
@@ -57,11 +62,13 @@ export class UserValidation {
     email: z.string().email().optional(),
     password: z
       .string()
-      .min(6)
+      .min(6, {
+        message: 'Password must be at least 6 characters',
+      })
       .max(100)
       .regex(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{6,}$/, {
         message:
-          'Password must contain at least 6 characters, include number, uppercase, lowercase, and special character',
+          'Password must contain at least 6 characters, include number, uppercase, lowercase',
       })
       .optional(),
     role: z

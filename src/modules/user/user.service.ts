@@ -139,6 +139,9 @@ export class UserService {
                 not: EUserRole.SuperAdmin,
               },
       },
+      orderBy: {
+        updatedAt: 'desc',
+      },
     });
 
     return users.map((user) => {
@@ -153,13 +156,10 @@ export class UserService {
     });
   }
 
-  async getUserByUsername(
-    currentUser: UserAuth,
-    username: string,
-  ): Promise<UserResponse> {
+  async getUserById(currentUser: UserAuth, id: string): Promise<UserResponse> {
     const user = await this.prismaService.user.findUnique({
       where: {
-        username,
+        id,
         clientId: currentUser.clientId,
       },
     });
