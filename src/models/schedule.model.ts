@@ -90,14 +90,14 @@ export class UpdateSubjectsScheduleRequest {
 export class AcademicCalendarResponse {
   id: string;
   name: string;
-  start: string;
-  end: string;
+  startTime: string | Date;
+  endTime: string | Date;
 }
 
 export class CreateAcademicCalendarRequest {
   name: string;
-  start: string;
-  end: string;
+  startTime: string;
+  endTime: string;
 }
 
 export class UpdateAcademicCalendarRequest {
