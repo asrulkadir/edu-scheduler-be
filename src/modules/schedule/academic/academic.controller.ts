@@ -2,7 +2,16 @@
 https://docs.nestjs.com/controllers#controllers
 */
 
-import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { AcademicService } from './academic.service';
 import { WebResponse } from 'src/models/web.model';
 import {
@@ -17,6 +26,20 @@ import { UserAuth } from 'src/models/auth.model';
 @Controller('api/academic')
 export class AcademicController {
   constructor(private AcademicService: AcademicService) {}
+
+  @Get('current')
+  @HttpCode(200)
+  async getCurrentAcademics(
+    @Auth() user: UserAuth,
+  ): Promise<WebResponse<AcademicCalendarResponse>> {
+    const result = await this.AcademicService.getCurrentAcademic(user);
+    return {
+      statusCode: 200,
+      status: 'success',
+      message: 'Academics found',
+      data: result,
+    };
+  }
 
   @Get(':id')
   async getAcademicById(
@@ -71,6 +94,21 @@ export class AcademicController {
       statusCode: 200,
       status: 'success',
       message: 'Academic updated',
+      data: result,
+    };
+  }
+
+  @Delete(':id')
+  @Roles(EUserRole.SuperAdmin, EUserRole.Admin)
+  async deleteAcademic(
+    @Auth() user: UserAuth,
+    @Param('id') id: string,
+  ): Promise<WebResponse<AcademicCalendarResponse>> {
+    const result = await this.AcademicService.deleteAcademic(user, id);
+    return {
+      statusCode: 200,
+      status: 'success',
+      message: 'Academic deleted',
       data: result,
     };
   }

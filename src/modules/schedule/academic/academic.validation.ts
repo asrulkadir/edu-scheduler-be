@@ -2,7 +2,7 @@ import { z, ZodType } from 'zod';
 
 export class AcademicValidation {
   static readonly CREATE: ZodType = z.object({
-    name: z.string().min(1).max(100),
+    name: z.string().min(1).max(250),
     startTime: z.preprocess((arg) => {
       if (typeof arg === 'string') {
         return new Date(arg);
@@ -19,7 +19,7 @@ export class AcademicValidation {
 
   static readonly UPDATE: ZodType = z.object({
     id: z.string().uuid(),
-    name: z.string().min(1).max(100).optional(),
+    name: z.string().min(1).max(250).optional(),
     startTime: z.preprocess((arg) => {
       if (typeof arg === 'string') {
         return new Date(arg);

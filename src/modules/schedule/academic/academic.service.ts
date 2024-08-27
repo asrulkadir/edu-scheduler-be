@@ -82,6 +82,28 @@ export class AcademicService {
     });
   }
 
+  async getCurrentAcademic(user: UserAuth) {
+    this.logger.debug(`getCurrentAcademic`);
+    const currentDate = new Date();
+    const academic = await this.prismaService.academicCalendar.findFirst({
+      where: {
+        clientId: user.clientId,
+        startTime: {
+          lte: currentDate,
+        },
+        endTime: {
+          gte: currentDate,
+        },
+      },
+    });
+
+    if (!academic) {
+      throw new HttpException('Academic calendar not found', 404);
+    }
+
+    return academic;
+  }
+
   async createAcademic(user: UserAuth, request: CreateAcademicCalendarRequest) {
     this.logger.debug(`createAcademic: academic=${JSON.stringify(request)}`);
     const createRequest = this.validationService.validate(
@@ -133,11 +155,23 @@ export class AcademicService {
     return academicCalendar;
   }
 
-  async deleteAcademic(id: string) {
+  async deleteAcademic(user: UserAuth, id: string) {
     this.logger.debug(`deleteAcademic: id=${id}`);
+    const academic = this.prismaService.academicCalendar.findUnique({
+      where: {
+        id: id,
+        clientId: user.clientId,
+      },
+    });
+
+    if (!academic) {
+      throw new HttpException('Academic calendar not found', 404);
+    }
+
     return await this.prismaService.academicCalendar.delete({
       where: {
         id: id,
+        clientId: user.clientId,
       },
     });
   }
