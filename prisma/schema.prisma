@@ -10,8 +10,8 @@ datasource db {
 model Teacher {
   id                String             @id @default(uuid())
   name              String
-  gender            String
-  subjectIds        String[]
+  gender            Gender
+  clientId          String
   profileImg        String?
   nip               String             @unique
   phone             String?            @unique
@@ -21,7 +21,6 @@ model Teacher {
   subjectsSchedules SubjectsSchedule[]
   teachingSchedules TeachingSchedule[]
   users             User[]
-  clientId  String
   client    Client   @relation(fields: [clientId], references: [id])
 }
 
@@ -161,4 +160,9 @@ enum Role {
   TEACHER
   STUDENT
   SUPERADMIN
+}
+
+enum Gender {
+  male @map("Laki-laki")
+  female @map("Perempuan")
 }

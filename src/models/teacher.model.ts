@@ -1,14 +1,15 @@
-import { EGender } from 'src/utils/enum';
+import { Gender } from '@prisma/client';
 
 export class TeacherResponse {
   id: string;
   name: string;
-  gender: EGender.female | EGender.male;
-  profileImg: string;
+  gender: Gender;
+  clientId: string;
+  profileImg?: string;
   nip: string;
-  phone: string;
-  address: string;
-  subjects: {
+  phone?: string;
+  address?: string;
+  subjects?: {
     id: string;
     name: string;
   }[];
@@ -16,7 +17,8 @@ export class TeacherResponse {
 
 export class CreateTeacherRequest {
   name: string;
-  gender: EGender.female | EGender.male;
+  gender: Gender;
+  clientId: string;
   profileImg?: string;
   nip: string;
   phone?: string;
@@ -27,7 +29,7 @@ export class CreateTeacherRequest {
 export class UpdateTeacherRequest {
   id: string;
   name?: string;
-  gender?: EGender.female | EGender.male;
+  gender?: Gender;
   profileImg?: string;
   nip?: string;
   phone?: string;
