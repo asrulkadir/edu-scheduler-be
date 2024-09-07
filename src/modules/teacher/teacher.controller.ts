@@ -20,17 +20,24 @@ import {
 import { Auth } from 'src/common/decorator/auth.decorator';
 import { UserAuth } from 'src/models/auth.model';
 import { WebResponse } from 'src/models/web.model';
+import { Roles } from 'src/common/decorator/roles.decorator';
+import { EUserRole } from 'src/utils/enum';
 
 @Controller('api/teacher')
 export class TeacherController {
   constructor(private teacherService: TeacherService) {}
 
   @Post()
+  @Roles(EUserRole.SuperAdmin, EUserRole.Admin)
   async createTeacher(
     @Auth() user: UserAuth,
     @Body() request: CreateTeacherRequest,
   ): Promise<WebResponse<TeacherResponse>> {
-    const result = await this.teacherService.createTeacher(user, request);
+    const createRequest: CreateTeacherRequest = {
+      ...request,
+      clientId: user.clientId,
+    };
+    const result = await this.teacherService.createTeacher(createRequest);
     return {
       statusCode: 200,
       status: 'success',
@@ -67,12 +74,21 @@ export class TeacherController {
   }
 
   @Put(':id')
+  @Roles(EUserRole.SuperAdmin, EUserRole.Admin)
   async updateTeacher(
     @Auth() user: UserAuth,
     @Param('id') id: string,
     @Body() request: UpdateTeacherRequest,
   ): Promise<WebResponse<TeacherResponse>> {
-    const result = await this.teacherService.updateTeacher(user, id, request);
+    const updateRequest: UpdateTeacherRequest = {
+      ...request,
+      id,
+    };
+    const result = await this.teacherService.updateTeacher(
+      user,
+      id,
+      updateRequest,
+    );
     return {
       statusCode: 200,
       status: 'success',
@@ -82,6 +98,7 @@ export class TeacherController {
   }
 
   @Delete(':id')
+  @Roles(EUserRole.SuperAdmin, EUserRole.Admin)
   async deleteTeacher(
     @Auth() user: UserAuth,
     @Param('id') id: string,

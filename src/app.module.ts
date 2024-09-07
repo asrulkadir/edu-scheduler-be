@@ -1,5 +1,5 @@
 import { TeacherModule } from './modules/teacher/teacher.module';
-import { AcademicModule } from './modules/schedule/academic/academic.module';
+import { AcademicModule } from './modules/academic/academic.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/user/user.module';
 import { Module } from '@nestjs/common';

@@ -22,26 +22,28 @@ export class TeacherService {
     private validationService: ValidationService,
   ) {}
 
-  async createTeacher(
-    user: UserAuth,
-    request: CreateTeacherRequest,
-  ): Promise<TeacherResponse> {
+  async createTeacher(request: CreateTeacherRequest): Promise<TeacherResponse> {
     this.logger.debug(`createTeacher: request=${JSON.stringify(request)}`);
     const createRequest: CreateTeacherRequest = this.validationService.validate(
       TeacherValidation.CREATE,
       request,
     );
 
-    const subjectsConnection = createRequest.subjects.map((subjectId) => ({
-      id: subjectId,
-    }));
-
     const teacher = await this.prismaService.teacher.create({
       data: {
         ...createRequest,
-        clientId: user.clientId,
         subjects: {
-          connect: subjectsConnection,
+          connect: createRequest.subjects?.map((subjectId) => ({
+            id: subjectId,
+          })),
+        },
+      },
+      include: {
+        subjects: {
+          select: {
+            id: true,
+            name: true,
+          },
         },
       },
     });
@@ -54,6 +56,14 @@ export class TeacherService {
       where: {
         clientId: user.clientId,
       },
+      include: {
+        subjects: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
     });
 
     return teachers;
@@ -65,7 +75,19 @@ export class TeacherService {
         clientId: user.clientId,
         id,
       },
+      include: {
+        subjects: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
     });
+
+    if (!teacher) {
+      throw new HttpException('Teacher not found', 404);
+    }
 
     return teacher;
   }
@@ -93,7 +115,7 @@ export class TeacherService {
       throw new HttpException('Teacher not found', 404);
     }
 
-    const subjectsConnection = updateRequest.subjects.map((subjectId) => ({
+    const subjectsConnection = updateRequest.subjects?.map((subjectId) => ({
       id: subjectId,
     }));
 
@@ -106,6 +128,14 @@ export class TeacherService {
         ...updateRequest,
         subjects: {
           set: subjectsConnection,
+        },
+      },
+      include: {
+        subjects: {
+          select: {
+            id: true,
+            name: true,
+          },
         },
       },
     });

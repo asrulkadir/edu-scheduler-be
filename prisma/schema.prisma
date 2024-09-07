@@ -163,6 +163,6 @@ enum Role {
 }
 
 enum Gender {
-  male @map("Laki-laki")
-  female @map("Perempuan")
+  male
+  female
 }
