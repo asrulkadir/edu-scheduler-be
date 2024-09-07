@@ -1,3 +1,4 @@
+import { SubjectsModule } from './modules/subject/subjects.module';
 import { TeacherModule } from './modules/teacher/teacher.module';
 import { AcademicModule } from './modules/academic/academic.module';
 import { AuthModule } from './modules/auth/auth.module';
@@ -9,6 +10,7 @@ import { CommonModule } from './common/module/common.module';
 
 @Module({
   imports: [
+    SubjectsModule,
     TeacherModule,
     AcademicModule,
     AuthModule,
