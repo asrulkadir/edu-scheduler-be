@@ -21,7 +21,7 @@ model Teacher {
   subjectsSchedules SubjectsSchedule[]
   teachingSchedules TeachingSchedule[]
   users             User[]
-  client            Client   @relation(fields: [clientId], references: [id])
+  client            Client             @relation(fields: [clientId], references: [id])
 }
 
 model User {
@@ -47,16 +47,16 @@ model Client {
   name                      String
   createdAt                 DateTime @default(now())
   updatedAt                 DateTime @updatedAt
-  
+
   users                     User[]
-  Subject                   Subject[]
-  Teacher                   Teacher[]
-  TeachingSchedule          TeachingSchedule[]
-  SubjectsSchedule          SubjectsSchedule[]
-  Class                     Class[]
-  Student                   Student[]
-  AcademicCalendar          AcademicCalendar[]
-  AcademicCalendarSchedule  AcademicCalendarSchedule[]
+  subject                   Subject[]
+  teacher                   Teacher[]
+  teachingSchedule          TeachingSchedule[]
+  subjectsSchedule          SubjectsSchedule[]
+  class                     Class[]
+  student                   Student[]
+  academicCalendar          AcademicCalendar[]
+  academicCalendarSchedule  AcademicCalendarSchedule[]
 }
 
 model Subject {
@@ -64,11 +64,11 @@ model Subject {
   name             String
   description      String
   teacher          Teacher[]
-  SubjectsSchedule SubjectsSchedule[]
-  TeachingSchedule TeachingSchedule[]
+  subjectsSchedule SubjectsSchedule[]
+  teachingSchedule TeachingSchedule[]
   classes          Class[]            @relation("ClassToSubject")
   clientId         String
-  client           Client   @relation(fields: [clientId], references: [id])
+  client           Client             @relation(fields: [clientId], references: [id])
 }
 
 model TeachingSchedule {
@@ -79,12 +79,12 @@ model TeachingSchedule {
   teacherId        String
   subjectId        String
   classId          String
-  SubjectsSchedule SubjectsSchedule[]
+  subjectsSchedule SubjectsSchedule[]
   class            Class              @relation(fields: [classId], references: [id])
   subject          Subject            @relation(fields: [subjectId], references: [id])
   teacher          Teacher            @relation(fields: [teacherId], references: [id])
   clientId         String
-  client           Client   @relation(fields: [clientId], references: [id])
+  client           Client             @relation(fields: [clientId], references: [id])
 }
 
 model SubjectsSchedule {
@@ -103,7 +103,7 @@ model SubjectsSchedule {
   teacher            Teacher?          @relation(fields: [takenByteacher], references: [id])
   teachingSchedule   TeachingSchedule? @relation(fields: [teachingScheduleId], references: [id])
   clientId           String
-  client             Client   @relation(fields: [clientId], references: [id])
+  client             Client            @relation(fields: [clientId], references: [id])
 }
 
 model Class {
@@ -112,24 +112,24 @@ model Class {
   homeroomTeacherId String?
   homeroomTeacher   Teacher?           @relation(fields: [homeroomTeacherId], references: [id])
   students          Student[]
-  SubjectsSchedule  SubjectsSchedule[]
-  TeachingSchedule  TeachingSchedule[]
+  subjectsSchedule  SubjectsSchedule[]
+  teachingSchedule  TeachingSchedule[]
   subjects          Subject[]          @relation("ClassToSubject")
   clientId          String
-  client            Client   @relation(fields: [clientId], references: [id])
+  client            Client             @relation(fields: [clientId], references: [id])
 }
 
 model Student {
   id         String  @id @default(uuid())
   name       String
-  gender     String
+  gender     Gender
   profileImg String?
   nis        String  @unique
   classId    String
   class      Class   @relation(fields: [classId], references: [id])
-  User       User[]
+  user       User[]
   clientId   String
-  client     Client   @relation(fields: [clientId], references: [id])
+  client     Client  @relation(fields: [clientId], references: [id])
 }
 
 model AcademicCalendar {
@@ -138,9 +138,9 @@ model AcademicCalendar {
   startTime        DateTime
   endTime          DateTime
   schedules        AcademicCalendarSchedule[]
-  SubjectsSchedule SubjectsSchedule[]
+  subjectsSchedule SubjectsSchedule[]
   clientId         String
-  client           Client   @relation(fields: [clientId], references: [id])
+  client           Client                     @relation(fields: [clientId], references: [id])
 }
 
 model AcademicCalendarSchedule {
@@ -151,7 +151,7 @@ model AcademicCalendarSchedule {
   academicCalendarId String
   academicCalendar   AcademicCalendar @relation(fields: [academicCalendarId], references: [id])
   clientId           String
-  client             Client   @relation(fields: [clientId], references: [id])
+  client             Client           @relation(fields: [clientId], references: [id])
 }
 
 enum Role {

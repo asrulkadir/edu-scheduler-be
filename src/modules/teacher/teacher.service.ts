@@ -2,7 +2,13 @@
 https://docs.nestjs.com/providers#services
 */
 
-import { HttpException, Inject, Injectable, Logger } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+  Logger,
+} from '@nestjs/common';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { PrismaService } from 'src/common/service/prisma.service';
 import { ValidationService } from 'src/common/service/validation.service';
@@ -28,6 +34,18 @@ export class TeacherService {
       TeacherValidation.CREATE,
       request,
     );
+
+    // check if nip already exists
+    const teacherNipExists = await this.prismaService.teacher.findFirst({
+      where: {
+        nip: createRequest.nip,
+        clientId: createRequest.clientId,
+      },
+    });
+
+    if (teacherNipExists) {
+      throw new HttpException('NIP already exists', HttpStatus.BAD_REQUEST);
+    }
 
     const teacher = await this.prismaService.teacher.create({
       data: {
@@ -94,7 +112,6 @@ export class TeacherService {
 
   async updateTeacher(
     user: UserAuth,
-    id: string,
     request: UpdateTeacherRequest,
   ): Promise<TeacherResponse> {
     this.logger.debug(`updateTeacher: request=${JSON.stringify(request)}`);
@@ -106,7 +123,7 @@ export class TeacherService {
     // check if teacher exists
     const teacherExists = await this.prismaService.teacher.findFirst({
       where: {
-        id,
+        id: updateRequest.id,
         clientId: user.clientId,
       },
     });
@@ -115,13 +132,28 @@ export class TeacherService {
       throw new HttpException('Teacher not found', 404);
     }
 
+    // check if nip already exists
+    const teacherNipExists = await this.prismaService.teacher.findFirst({
+      where: {
+        nip: updateRequest.nip,
+        clientId: user.clientId,
+        NOT: {
+          id: updateRequest.id,
+        },
+      },
+    });
+
+    if (teacherNipExists) {
+      throw new HttpException('NIP already exists', HttpStatus.BAD_REQUEST);
+    }
+
     const subjectsConnection = updateRequest.subjects?.map((subjectId) => ({
       id: subjectId,
     }));
 
     const teacher = await this.prismaService.teacher.update({
       where: {
-        id,
+        id: updateRequest.id,
         clientId: user.clientId,
       },
       data: {

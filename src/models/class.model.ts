@@ -1,50 +1,46 @@
 export class ClassResponse {
   id: string;
   name: string;
-  homeroomTeacher: {
+  clientId: string;
+  homeroomTeacher?: {
     id: string;
     name: string;
   };
-  subjects: {
+  subjects?: {
     id: string;
     name: string;
   }[];
-  students: {
+  students?: {
     id: string;
     name: string;
   }[];
-  subjectsSchedule: {
+  subjectsSchedule?: {
     id: string;
-    name: string;
-    day: string;
-    start: string;
-    end: string;
+    days: string;
+    startTime: string | Date;
+    endTime: string | Date;
+    subject: {
+      id: string;
+      name: string;
+    };
   }[];
 }
 
 export class CreateClassRequest {
   name: string;
+  clientId: string;
   homeroomTeacherId?: string;
   subjects?: string[];
   students?: string[];
-  subjectsSchedule?: {
-    subjectId: string;
-    day: string;
-    start: string;
-    end: string;
-  }[];
+  subjectsSchedule?: string[];
 }
 
 export class UpdateClassRequest {
   id: string;
+  clientId: string;
   name?: string;
   homeroomTeacherId?: string;
   subjects?: string[];
   students?: string[];
-  subjectsSchedule?: {
-    subjectId: string;
-    day: string;
-    start: string;
-    end: string;
-  }[];
+  subjectsSchedule?: string[];
 }

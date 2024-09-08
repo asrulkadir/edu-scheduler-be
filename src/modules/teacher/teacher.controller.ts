@@ -84,11 +84,7 @@ export class TeacherController {
       ...request,
       id,
     };
-    const result = await this.teacherService.updateTeacher(
-      user,
-      id,
-      updateRequest,
-    );
+    const result = await this.teacherService.updateTeacher(user, updateRequest);
     return {
       statusCode: 200,
       status: 'success',
