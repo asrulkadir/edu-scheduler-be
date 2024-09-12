@@ -47,6 +47,20 @@ export class TeacherService {
       throw new HttpException('NIP already exists', HttpStatus.BAD_REQUEST);
     }
 
+    if (createRequest.phone) {
+      // check if phone already exists
+      const teacherPhoneExists = await this.prismaService.teacher.findFirst({
+        where: {
+          phone: createRequest.phone,
+          clientId: createRequest.clientId,
+        },
+      });
+
+      if (teacherPhoneExists) {
+        throw new HttpException('Phone already exists', HttpStatus.BAD_REQUEST);
+      }
+    }
+
     const teacher = await this.prismaService.teacher.create({
       data: {
         ...createRequest,
@@ -132,19 +146,38 @@ export class TeacherService {
       throw new HttpException('Teacher not found', 404);
     }
 
-    // check if nip already exists
-    const teacherNipExists = await this.prismaService.teacher.findFirst({
-      where: {
-        nip: updateRequest.nip,
-        clientId: user.clientId,
-        NOT: {
-          id: updateRequest.id,
+    if (updateRequest.nip) {
+      // check if nip already exists
+      const teacherNipExists = await this.prismaService.teacher.findFirst({
+        where: {
+          nip: updateRequest.nip,
+          clientId: user.clientId,
+          NOT: {
+            id: updateRequest.id,
+          },
         },
-      },
-    });
+      });
 
-    if (teacherNipExists) {
-      throw new HttpException('NIP already exists', HttpStatus.BAD_REQUEST);
+      if (teacherNipExists) {
+        throw new HttpException('NIP already exists', HttpStatus.BAD_REQUEST);
+      }
+    }
+
+    if (updateRequest.phone) {
+      // check if phone already exists
+      const teacherPhoneExists = await this.prismaService.teacher.findFirst({
+        where: {
+          phone: updateRequest.phone,
+          clientId: user.clientId,
+          NOT: {
+            id: updateRequest.id,
+          },
+        },
+      });
+
+      if (teacherPhoneExists) {
+        throw new HttpException('Phone already exists', HttpStatus.BAD_REQUEST);
+      }
     }
 
     const subjectsConnection = updateRequest.subjects?.map((subjectId) => ({

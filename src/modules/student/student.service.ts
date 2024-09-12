@@ -127,19 +127,21 @@ export class StudentService {
       throw new HttpException('Student not found', HttpStatus.NOT_FOUND);
     }
 
-    // check if nis already exists
-    const studentNisExists = await this.prismaService.student.findFirst({
-      where: {
-        nis: updateRequest.nis,
-        clientId: user.clientId,
-        NOT: {
-          id: updateRequest.id,
+    if (updateRequest.nis) {
+      // check if nis already exists
+      const studentNisExists = await this.prismaService.student.findFirst({
+        where: {
+          nis: updateRequest.nis,
+          clientId: user.clientId,
+          NOT: {
+            id: updateRequest.id,
+          },
         },
-      },
-    });
+      });
 
-    if (studentNisExists) {
-      throw new HttpException('NIS already exists', HttpStatus.BAD_REQUEST);
+      if (studentNisExists) {
+        throw new HttpException('NIS already exists', HttpStatus.BAD_REQUEST);
+      }
     }
 
     const student = await this.prismaService.student.update({

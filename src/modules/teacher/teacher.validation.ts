@@ -9,7 +9,9 @@ export class TeacherValidation {
     nip: z.string(),
     subjects: z.array(z.string().uuid()).optional(),
     profileImg: z.string().optional(),
-    phone: z.string().optional(),
+    phone: z.string().regex(/^[0-9\b]+$/, {
+      message: 'Phone number must be numeric',
+    }),
     address: z.string().optional(),
   });
 
