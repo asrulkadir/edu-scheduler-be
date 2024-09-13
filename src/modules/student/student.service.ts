@@ -77,6 +77,9 @@ export class StudentService {
           },
         },
       },
+      orderBy: {
+        id: 'desc',
+      },
     });
 
     return students;

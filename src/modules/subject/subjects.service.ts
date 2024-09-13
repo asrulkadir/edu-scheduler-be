@@ -72,6 +72,9 @@ export class SubjectsService {
           },
         },
       },
+      orderBy: {
+        id: 'desc',
+      },
     });
 
     return subjects;

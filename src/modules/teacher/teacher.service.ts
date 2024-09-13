@@ -96,6 +96,9 @@ export class TeacherService {
           },
         },
       },
+      orderBy: {
+        id: 'desc',
+      },
     });
 
     return teachers;

@@ -109,6 +109,7 @@ model SubjectsSchedule {
 model Class {
   id                String             @id @default(uuid())
   name              String
+  description       String?
   homeroomTeacherId String?
   homeroomTeacher   Teacher?           @relation(fields: [homeroomTeacherId], references: [id])
   students          Student[]
