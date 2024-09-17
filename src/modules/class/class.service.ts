@@ -244,17 +244,17 @@ export class ClassService {
       data: {
         ...updateRequest,
         students: {
-          connect: updateRequest.students?.map((studentId) => ({
+          set: updateRequest.students?.map((studentId) => ({
             id: studentId,
           })),
         },
         subjects: {
-          connect: updateRequest.subjects?.map((subjectId) => ({
+          set: updateRequest.subjects?.map((subjectId) => ({
             id: subjectId,
           })),
         },
         subjectsSchedule: {
-          connect: updateRequest.subjectsSchedule?.map((scheduleId) => ({
+          set: updateRequest.subjectsSchedule?.map((scheduleId) => ({
             id: scheduleId,
           })),
         },
@@ -306,10 +306,25 @@ export class ClassService {
         id: classId,
         clientId: user.clientId,
       },
+      include: {
+        students: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
     });
 
     if (!classExists) {
       throw new HttpException('Class not found', HttpStatus.NOT_FOUND);
+    }
+
+    if (classExists.students.length > 0) {
+      throw new HttpException(
+        'Cannot delete class with students',
+        HttpStatus.BAD_REQUEST,
+      );
     }
 
     const className = await this.prismaService.class.delete({

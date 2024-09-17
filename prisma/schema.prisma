@@ -126,8 +126,8 @@ model Student {
   gender     Gender
   profileImg String?
   nis        String  @unique
-  classId    String
-  class      Class   @relation(fields: [classId], references: [id])
+  classId    String?
+  class      Class?   @relation(fields: [classId], references: [id])
   user       User[]
   clientId   String
   client     Client  @relation(fields: [clientId], references: [id])
