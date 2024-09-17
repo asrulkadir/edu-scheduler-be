@@ -2,6 +2,7 @@ export class ClassResponse {
   id: string;
   name: string;
   clientId: string;
+  description?: string;
   homeroomTeacher?: {
     id: string;
     name: string;
@@ -29,6 +30,7 @@ export class ClassResponse {
 export class CreateClassRequest {
   name: string;
   clientId: string;
+  description?: string;
   homeroomTeacherId?: string;
   subjects?: string[];
   students?: string[];
@@ -39,6 +41,7 @@ export class UpdateClassRequest {
   id: string;
   clientId: string;
   name?: string;
+  description?: string;
   homeroomTeacherId?: string;
   subjects?: string[];
   students?: string[];

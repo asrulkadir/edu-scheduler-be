@@ -78,7 +78,7 @@ export class StudentService {
         },
       },
       orderBy: {
-        id: 'desc',
+        name: 'asc',
       },
     });
 

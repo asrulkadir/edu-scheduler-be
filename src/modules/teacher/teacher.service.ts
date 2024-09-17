@@ -94,10 +94,13 @@ export class TeacherService {
             id: true,
             name: true,
           },
+          orderBy: {
+            name: 'asc',
+          },
         },
       },
       orderBy: {
-        id: 'desc',
+        name: 'asc',
       },
     });
 

@@ -114,6 +114,9 @@ export class ClassService {
       where: {
         clientId: user.clientId,
       },
+      orderBy: {
+        name: 'asc',
+      },
       include: {
         homeroomTeacher: {
           select: {
@@ -131,6 +134,9 @@ export class ClassService {
           select: {
             id: true,
             name: true,
+          },
+          orderBy: {
+            name: 'asc',
           },
         },
         subjectsSchedule: {
