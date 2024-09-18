@@ -24,6 +24,9 @@ jobs:
         echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> .env
         echo "POSTGRES_DB=${{ secrets.POSTGRES_DB }}" >> .env
 
+    - name: Install dependencies
+      run: npm install
+
     - name: Run unit test
       run: npm run test
 
