@@ -3,7 +3,7 @@ export class SubjectsResponse {
   name: string;
   description: string;
   clientId: string;
-  teachers?: {
+  teacher?: {
     id: string;
     name: string;
   }[];
@@ -13,7 +13,7 @@ export class CreateSubjectsRequest {
   name: string;
   description: string;
   clientId: string;
-  teachers?: string[];
+  teacher?: string[];
 }
 
 export class UpdateSubjectsRequest {
@@ -21,5 +21,5 @@ export class UpdateSubjectsRequest {
   clientId: string;
   name?: string;
   description?: string;
-  teachers?: string[];
+  teacher?: string[];
 }

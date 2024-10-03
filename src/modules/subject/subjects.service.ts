@@ -35,7 +35,7 @@ export class SubjectsService {
     const createRequest: CreateSubjectsRequest =
       this.validationService.validate(SubjectsValidation.CREATE, request);
 
-    const teacherConnection = createRequest.teachers?.map((teacherId) => ({
+    const teacherConnection = createRequest.teacher?.map((teacherId) => ({
       id: teacherId,
     }));
 
@@ -73,7 +73,7 @@ export class SubjectsService {
         },
       },
       orderBy: {
-        id: 'desc',
+        name: 'asc',
       },
     });
 
@@ -125,7 +125,7 @@ export class SubjectsService {
       throw new HttpException('Subject not found', HttpStatus.NOT_FOUND);
     }
 
-    const teacherConnection = updateRequest.teachers?.map((teacherId) => ({
+    const teacherConnection = updateRequest.teacher?.map((teacherId) => ({
       id: teacherId,
     }));
 

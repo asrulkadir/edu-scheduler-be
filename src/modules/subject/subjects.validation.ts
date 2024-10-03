@@ -5,7 +5,7 @@ export class SubjectsValidation {
     name: z.string().min(1).max(100),
     description: z.string().min(1).max(100),
     clientId: z.string().uuid(),
-    teachers: z.array(z.string().uuid()).optional(),
+    teacher: z.array(z.string().uuid()).optional(),
   });
 
   static readonly UPDATE: ZodType = z.object({
@@ -13,7 +13,7 @@ export class SubjectsValidation {
     clientId: z.string().uuid(),
     name: z.string().min(1).max(100).optional(),
     description: z.string().min(1).max(100).optional(),
-    teachers: z.array(z.string().uuid()).optional(),
+    teacher: z.array(z.string().uuid()).optional(),
   });
 
   static readonly DELETE: ZodType = z.object({
