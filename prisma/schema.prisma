@@ -73,7 +73,7 @@ model Subject {
 
 model TeachingSchedule {
   id               String             @id @default(uuid())
-  days             String
+  day              Day
   startTime        DateTime
   endTime          DateTime
   teacherId        String
@@ -89,7 +89,7 @@ model TeachingSchedule {
 
 model SubjectsSchedule {
   id                 String            @id @default(uuid())
-  days               String
+  day                Day
   startTime          DateTime
   endTime            DateTime
   takenByteacher     String?
@@ -165,4 +165,14 @@ enum Role {
 enum Gender {
   male
   female
+}
+
+enum Day {
+  sunday
+  monday
+  tuesday
+  wednesday
+  thursday
+  friday
+  saturday
 }

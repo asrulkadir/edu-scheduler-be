@@ -1,4 +1,12 @@
 // teaching schedule model
+type TDay =
+  | 'monday'
+  | 'tuesday'
+  | 'wednesday'
+  | 'thursday'
+  | 'friday'
+  | 'saturday'
+  | 'sunday';
 export class TeachingScheduleResponse {
   id: string;
   subject: {
@@ -9,26 +17,26 @@ export class TeachingScheduleResponse {
     id: string;
     name: string;
   };
-  day: string;
-  start: string;
-  end: string;
+  day: TDay;
+  startTime: string;
+  endTime: string;
 }
 
 export class CreateTeachingScheduleRequest {
   subjectId: string;
   teacherId: string;
-  day: string;
-  start: string;
-  end: string;
+  day: TDay;
+  startTime: string;
+  endTime: string;
 }
 
 export class UpdateTeachingScheduleRequest {
   id: string;
   subjectId?: string;
   teacherId?: string;
-  day?: string;
-  start?: string;
-  end?: string;
+  day?: TDay;
+  startTime?: string;
+  endTime?: string;
 }
 
 // subjects schedule model
@@ -38,9 +46,9 @@ export class SubjectsScheduleResponse {
     id: string;
     name: string;
   };
-  day: string;
-  start: string;
-  end: string;
+  day: TDay;
+  startTime: string | Date;
+  endTime: string | Date;
   teacher: {
     id: string;
     name: string;
@@ -51,23 +59,24 @@ export class SubjectsScheduleResponse {
   };
   teachingSchedule: {
     id: string;
-    day: string;
-    start: string;
-    end: string;
+    day: TDay;
+    startTime: string;
+    endTime: string;
   };
   academicCalendar: {
     id: string;
     name: string;
-    start: string;
-    end: string;
+    startTime: string;
+    endTime: string;
   };
 }
 
 export class CreateSubjectsScheduleRequest {
   subjectId: string;
-  day: string;
-  start: string;
-  end: string;
+  clientId: string;
+  day: TDay;
+  startTime: string | Date;
+  endTime: string | Date;
   teacherId: string;
   classId: string;
   teachingScheduleId: string;
@@ -76,10 +85,11 @@ export class CreateSubjectsScheduleRequest {
 
 export class UpdateSubjectsScheduleRequest {
   id: string;
+  clientId: string;
   subjectId?: string;
-  day?: string;
-  start?: string;
-  end?: string;
+  day?: TDay;
+  startTime?: string | Date;
+  endTime?: string | Date;
   teacherId?: string;
   classId?: string;
   teachingScheduleId?: string;
@@ -96,13 +106,13 @@ export class AcademicCalendarResponse {
 
 export class CreateAcademicCalendarRequest {
   name: string;
-  startTime: string;
-  endTime: string;
+  startTime: string | Date;
+  endTime: string | Date;
 }
 
 export class UpdateAcademicCalendarRequest {
   id: string;
   name?: string;
-  start?: string;
-  end?: string;
+  startTime?: string;
+  endTime?: string;
 }

@@ -20,8 +20,8 @@ export class AcademicService {
 
   async validateCalendarDates(
     user: UserAuth,
-    startTime: string,
-    endTime: string,
+    startTime: string | Date,
+    endTime: string | Date,
     excludeId?: string,
   ) {
     // Check if start time is earlier than end time

@@ -1,3 +1,4 @@
+import { SubjectsScheduleModule } from './modules/schedule/subjects/subjectsschedule.module';
 import { ClassModule } from './modules/class/class.module';
 import { StudentModule } from './modules/student/student.module';
 import { SubjectsModule } from './modules/subject/subjects.module';
@@ -12,6 +13,7 @@ import { CommonModule } from './common/module/common.module';
 
 @Module({
   imports: [
+    SubjectsScheduleModule,
     ClassModule,
     StudentModule,
     SubjectsModule,
