@@ -91,7 +91,7 @@ export class ClassService {
         subjectsSchedule: {
           select: {
             id: true,
-            days: true,
+            day: true,
             startTime: true,
             endTime: true,
             subject: {
@@ -142,7 +142,7 @@ export class ClassService {
         subjectsSchedule: {
           select: {
             id: true,
-            days: true,
+            day: true,
             startTime: true,
             endTime: true,
             subject: {
@@ -199,7 +199,7 @@ export class ClassService {
         subjectsSchedule: {
           select: {
             id: true,
-            days: true,
+            day: true,
             startTime: true,
             endTime: true,
             subject: {
@@ -281,7 +281,7 @@ export class ClassService {
         subjectsSchedule: {
           select: {
             id: true,
-            days: true,
+            day: true,
             startTime: true,
             endTime: true,
             subject: {
@@ -353,7 +353,7 @@ export class ClassService {
         subjectsSchedule: {
           select: {
             id: true,
-            days: true,
+            day: true,
             startTime: true,
             endTime: true,
             subject: {

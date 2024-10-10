@@ -17,7 +17,7 @@ export class ClassResponse {
   }[];
   subjectsSchedule?: {
     id: string;
-    days: string;
+    day: string;
     startTime: string | Date;
     endTime: string | Date;
     subject: {

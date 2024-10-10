@@ -27,7 +27,7 @@ export class SubjectsScheduleValidation {
     }, z.date()),
     classId: z.string().uuid(),
     academicCalendarId: z.string().uuid(),
-    teacherId: z.string().uuid(),
+    takenByteacher: z.string().uuid().optional(),
     teachingScheduleId: z.string().uuid().optional(),
   });
 
@@ -60,7 +60,7 @@ export class SubjectsScheduleValidation {
     }, z.date().optional()),
     classId: z.string().uuid().optional(),
     academicCalendarId: z.string().uuid().optional(),
-    teacherId: z.string().uuid().optional(),
+    takenByteacher: z.string().uuid().optional(),
     teachingScheduleId: z.string().uuid().optional(),
   });
 

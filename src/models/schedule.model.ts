@@ -49,7 +49,7 @@ export class SubjectsScheduleResponse {
   day: TDay;
   startTime: string | Date;
   endTime: string | Date;
-  teacher: {
+  teacher?: {
     id: string;
     name: string;
   };
@@ -57,17 +57,17 @@ export class SubjectsScheduleResponse {
     id: string;
     name: string;
   };
-  teachingSchedule: {
+  teachingSchedule?: {
     id: string;
     day: TDay;
-    startTime: string;
-    endTime: string;
+    startTime: string | Date;
+    endTime: string | Date;
   };
   academicCalendar: {
     id: string;
     name: string;
-    startTime: string;
-    endTime: string;
+    startTime: string | Date;
+    endTime: string | Date;
   };
 }
 
@@ -77,7 +77,7 @@ export class CreateSubjectsScheduleRequest {
   day: TDay;
   startTime: string | Date;
   endTime: string | Date;
-  teacherId: string;
+  takenByTeacher: string;
   classId: string;
   teachingScheduleId: string;
   academicCalendarId: string;
@@ -90,7 +90,7 @@ export class UpdateSubjectsScheduleRequest {
   day?: TDay;
   startTime?: string | Date;
   endTime?: string | Date;
-  teacherId?: string;
+  takenByTeacher?: string;
   classId?: string;
   teachingScheduleId?: string;
   academicCalendarId?: string;
